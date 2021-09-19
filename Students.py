@@ -1,4 +1,6 @@
+
 class Student:
+    persons_list = []
     def __init__(self, name, surname, gender):
         self.name = name
         self.surname = surname
@@ -6,7 +8,10 @@ class Student:
         self.finished_courses = []
         self.courses_in_progress = []
         self.grades = {}
-   
+        Student.persons_list.append([name, surname])
+    
+    
+
     def rate_lector(self, lector, course, grade):
         if isinstance(lector, Lector) and course in lector.courses_attached and course in self.courses_in_progress:
             if int(grade)> 10 or int(grade) < 0:
@@ -70,10 +75,12 @@ class Mentor:
             
 
 class Lector(Mentor):
+    persons_list = []
     def __init__(self, name, surname):
         super().__init__(name, surname)    
         self.courses_attached = []
         self.grades = {}
+        Lector.persons_list.append([name, surname])
     
     def __str__(self):
         
@@ -116,21 +123,15 @@ class Reviewer(Mentor):
         return visit_card
 
 
-def average_for_course(name, course):
-    if isinstance(name, Student) or isinstance(name, Lector):
-        if course in name.grades:
-            sum_of_grades = 0
-            amount = 0
-            for grade in name.grades[course]:
-                sum_of_grades += grade
-                amount += 1
-            av_grade = float("{0:.1f}".format(sum_of_grades / amount))
-            return av_grade
-        else:
-            return 'Недостаточно оценок'
-    else:
-        return ("Такого лектора или студента в базе нет")
+def hw_for_course(course):
+    grades = 0
+    amount_hw = 0
+    if 
+
+   
+    return ("Такого лектора или студента в базе нет")
     
+
 
 
 
@@ -168,13 +169,14 @@ print(best_student)
 print(cool_mentor == lector1)
 print(best_student == worst_student)
 
+
 # проверка средней оценки для студента
-print('Средняя оценка у Ruoy Eman за курс Python')
-print(average_for_course(best_student, 'Python'))
+print('Средняя оценка у студентов за курс Python')
+print(hw_for_course('Python'))
 
 # проверка средней оценки для лектора
 print('Средняя оценка у Some Buddy за курс Python')
-print(average_for_course(cool_mentor, 'Python'))    
+print(lection_for_course('Python'))    
 
 # тест функции на ошибку
 print('Средняя оценка у ревьюера')
