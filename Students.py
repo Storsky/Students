@@ -51,8 +51,8 @@ class Student:
         
    
     def __str__(self):
-        fin_courses = ''.join(self.finished_courses)
-        cont_courses = ''.join(self.courses_in_progress)
+        fin_courses = ', '.join(self.finished_courses)
+        cont_courses = ', '.join(self.courses_in_progress)
         average = self.average_grade()
         if cont_courses == '':
             cont_courses = 'Нет'
@@ -62,8 +62,8 @@ class Student:
         visit_card = f'Студент\nИмя = {self.name} \
                     \nФамилия = {self.surname}\
                     \nСредняя оценка за домашние задания = {average}\
-                    \nИзучаемые курсы = {fin_courses}\
-                    \nЗавершенные курсы = {cont_courses}'
+                    \nИзучаемые курсы = {cont_courses}\
+                    \nЗавершенные курсы = {fin_courses}'
         return visit_card
 
 
@@ -126,12 +126,32 @@ class Reviewer(Mentor):
 def hw_for_course(course):
     grades = 0
     amount_hw = 0
-    if 
-
-   
-    return ("Такого лектора или студента в базе нет")
+    for student in students_list:
+        if course in student.grades:
+            for grade in student.grades[course]:
+                grades += grade
+                amount_hw += 1
+    if amount_hw:
+        av_grade = float("{0:.1f}".format(grades/amount_hw))
+    else:
+        av_grade = 'Недостаточно оценок'
+          
+    return (av_grade)
     
-
+def lection_for_course(course):
+    grades = 0
+    amount_lct = 0
+    for lector in lectors_list:
+        if course in lector.grades:
+            for grade in lector.grades[course]:
+                grades += grade
+                amount_lct += 1
+    if amount_lct:
+        av_grade = float("{0:.1f}".format(grades/amount_lct))
+    else:
+        av_grade = 'Недостаточно оценок'
+          
+    return (av_grade)
 
 
 
@@ -144,6 +164,8 @@ worst_student = Student('Mike', 'Oxlong', 'helicopter')
 worst_student.courses_in_progress += ['Python']
 worst_student.courses_in_progress += ['GIT']
 
+students_list = [best_student, worst_student]
+
 cool_mentor = Lector('Some', 'Buddy')
 cool_mentor.courses_attached += ['Python']
 cool_mentor.courses_attached += ['GIT']
@@ -152,6 +174,7 @@ lector1 = Lector('Ганнибал','Лектор')
 lector1.courses_attached += ['Python']
 lector1.courses_attached += ['GIT']
 
+lectors_list = [cool_mentor, lector1]
 even_cooler_mentor = Reviewer('Once','Told me')
 even_cooler_mentor.courses_attached += ['Python']
 even_cooler_mentor.courses_attached += ['GIT']
@@ -168,16 +191,5 @@ print(lector1)
 print(best_student)
 print(cool_mentor == lector1)
 print(best_student == worst_student)
-
-
-# проверка средней оценки для студента
-print('Средняя оценка у студентов за курс Python')
 print(hw_for_course('Python'))
-
-# проверка средней оценки для лектора
-print('Средняя оценка у Some Buddy за курс Python')
-print(lection_for_course('Python'))    
-
-# тест функции на ошибку
-print('Средняя оценка у ревьюера')
-print(average_for_course(even_cooler_mentor, 'Python'))
+print(lection_for_course('GIT'))
