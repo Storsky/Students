@@ -1,6 +1,35 @@
+path_ = 'D:\project\log.txt'
+
+def logwriter(path, log_list):
+    with open(path, "a", encoding="utf-8") as f:
+        for i in log_list:
+            f.write(i + '\n')
+    return
+
+def decor_with_args(logger, path):
+    def decorator_function(func):
+        import datetime as dt
+        def wrapper(*args, **kwargs):
+            log = []
+            log.append(str(dt.datetime.now()))
+            log.append(f'Вызываемая функция: {func.__name__}')
+            log.append(f'Аргументы функции = {args}')
+            log.append('Результат выполнения = ' + str(func(*args,**kwargs)))
+            result = func(*args, **kwargs)
+            logger(path, log)
+            print('Лог записан')
+        return wrapper
+    return decorator_function
+
+
+
+
+
+
+
+
 
 class Student:
-    persons_list = []
     def __init__(self, name, surname, gender):
         self.name = name
         self.surname = surname
@@ -8,19 +37,19 @@ class Student:
         self.finished_courses = []
         self.courses_in_progress = []
         self.grades = {}
-        Student.persons_list.append([name, surname])
     
-    
-
+    @decor_with_args(logwriter, path_)
     def rate_lector(self, lector, course, grade):
         if isinstance(lector, Lector) and course in lector.courses_attached and course in self.courses_in_progress:
             if int(grade)> 10 or int(grade) < 0:
                 print('Введите число от 0 до 10')
-                return
+                return 'Ошибка'
             elif course in lector.grades:
                 lector.grades[course] += [grade]
+                return 'Оценка записана'
             else:
                 lector.grades[course] = [grade]
+                return 'Курс и оценка записана'
         else:
             return 'Ошибка'
             
@@ -153,9 +182,7 @@ def lection_for_course(course):
           
     return (av_grade)
 
-
-
-
+# Создание экземпляров классов
 best_student = Student('Ruoy', 'Eman', 'your_gender')
 best_student.courses_in_progress += ['Python']
 best_student.courses_in_progress += ['GIT']
@@ -163,8 +190,6 @@ best_student.courses_in_progress += ['GIT']
 worst_student = Student('Mike', 'Oxlong', 'helicopter')
 worst_student.courses_in_progress += ['Python']
 worst_student.courses_in_progress += ['GIT']
-
-students_list = [best_student, worst_student]
 
 cool_mentor = Lector('Some', 'Buddy')
 cool_mentor.courses_attached += ['Python']
@@ -179,17 +204,25 @@ even_cooler_mentor = Reviewer('Once','Told me')
 even_cooler_mentor.courses_attached += ['Python']
 even_cooler_mentor.courses_attached += ['GIT']
 
-
+# Тест выставления оценок
 even_cooler_mentor.rate_hw(best_student, 'Python', 7)
 even_cooler_mentor.rate_hw(worst_student, 'Python', 2)
 even_cooler_mentor.rate_hw(best_student, 'GIT', 10)
 best_student.rate_lector(cool_mentor, 'Python', 10)
 best_student.rate_lector(lector1, 'GIT', 6)
 
+# Создание списков студентов и лекторов
+students_list = [best_student, worst_student]
+lectors_list = [cool_mentor, lector1]
+
+# Тест перегрузки магических методов
 print(cool_mentor)
 print(lector1)
 print(best_student)
 print(cool_mentor == lector1)
 print(best_student == worst_student)
+
+# Тест функций оценки дз за курс и лекций за курс
 print(hw_for_course('Python'))
+
 print(lection_for_course('GIT'))
