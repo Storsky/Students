@@ -18,6 +18,7 @@ def decor_with_args(logger, path):
             result = func(*args, **kwargs)
             logger(path, log)
             print('Лог записан')
+            return result
         return wrapper
     return decorator_function
 
